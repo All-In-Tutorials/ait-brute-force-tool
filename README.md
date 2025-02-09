@@ -1,6 +1,6 @@
 ## 📌 Introduction
 
-**AIT BruteForce Tool** is an open-source Python-based tool designed for security testing and password auditing.  
+**AIT Brute Force Tool** is an open-source Python-based tool designed for security testing and password auditing.  
 It automates brute-force attacks using **ChromeDriver**, making it useful for penetration testing and cybersecurity research.  
 
 ⚠️ **Disclaimer:** This tool is intended for **educational and security research purposes only**.  
@@ -93,5 +93,12 @@ If you see **"command not found"**, ensure **Python is installed and added to yo
 
 ---
 
-## 📜 License  
+## 📢 Changelog
+
+See the latest updates and improvements in the [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## 📜 License 
+
 This project is open-source and licensed under the **MIT License**.
