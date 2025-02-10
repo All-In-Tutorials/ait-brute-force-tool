@@ -1,6 +1,6 @@
 # 📌 CHANGELOG
 
-## 🔥 Latest Improvements
+## 🔥 Latest Improvements (Development)
 
 ### ✅ Better Logging
 - Uses `logging.info()` instead of `print()`, making debugging easier.
@@ -21,3 +21,9 @@
   ```sh
   python main.py --login_url "http://example.com/login" --wrong_url "http://example.com/fail"
   ```
+
+## [Unreleased]
+### Added
+- Made credential loading dynamic for portability.
+- Created `generator.py` file for dictionary file creation.
+- Added .gitignore to exclude the Dictionary directory.

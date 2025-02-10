@@ -69,7 +69,14 @@ or
 ```sh
 python3 main.py
 ```
+### Running with CLI Arguments
 
+- Run the tool with custom login/dashboard URLs:
+  
+  ```sh
+  python main.py --login_url "http://example.com/login" --wrong_url "http://example.com/fail"
+  ```
+---
 
 ### How It Works  
 The script automates browser interaction using **ChromeDriver**.  
