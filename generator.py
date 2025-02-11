@@ -49,8 +49,8 @@ def create_dictionary(option):
             f.write("")
     
     dir_names = {
-        "1": "1-UC-Letters",
-        "2": "2-Num-UC-Letters",
+        "1": "1-UC-UC-UC-UC",
+        "2": "2-Num-UC-UC-UC",
         "3": "3-UC-Num-UC-UC",
         "4": "4-UC-UC-Num-UC",
         "5": "5-UC-UC-UC-Num",

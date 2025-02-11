@@ -34,6 +34,19 @@ or
 python3 --version
 ```
 
+### 3️⃣ Selenium  
+This tool relies on **Selenium** for browser automation. Install it via pip:  
+
+```sh
+pip install selenium
+```
+
+Verify installation with:
+
+```sh
+python -c "import selenium; print(selenium.__version__)"
+```
+
 ---
 
 ## 🚀 Installation & Setup
@@ -57,7 +70,19 @@ cd ait-brute-force-tool
 
 ## 📌 Usage
 
-### Running the Tool  
+### Running the Generator (generator.py)
+
+- The generator creates possible (A-Z) and (1-9) combinations based on predefined rules.
+
+```sh
+python generator.py
+```
+
+- It will automatically generate possible combinations based on selected option (1-14).
+- Option 15 will automatically execute all options from 1 to 14 (choose this option if you want to generate all).
+- **This script also generates a `prefix.txt` file, which is required for testing.** Ensure this file **exists** and contains a **hardcoded value for the exact username prefix** after execution.
+
+### Running the Brute Force Tool (main.py)
 
 To start the tool, run:
 
@@ -69,6 +94,7 @@ or
 ```sh
 python3 main.py
 ```
+
 ### Running with CLI Arguments
 
 - Run the tool with custom login/dashboard URLs:
@@ -76,11 +102,42 @@ python3 main.py
   ```sh
   python main.py --login_url "http://example.com/login" --wrong_url "http://example.com/fail"
   ```
+
 ---
 
-### How It Works  
-The script automates browser interaction using **ChromeDriver**.  
-Follow on-screen prompts and wait for the process to complete.  
+## 🔢 Mapping Rules
+
+### Overview
+This document outlines the mapping rules for username and password combinations. There are two levels of mapping: **Basic Level** and **Advanced Level**.
+
+### Basic Level Mapping
+In this level, each username maps to an identical password.
+
+```
+1  -> 1
+2  -> 2
+3  -> 3
+...
+14 -> 14
+```
+
+### Advanced Level Mapping
+In this level, each username maps to multiple possible passwords, except for its identical match.
+
+```
+1  -> 2, 3, 4, 5, ..., 14
+2  -> 1, 3, 4, 5, ..., 14
+...
+14 -> 1, 2, 3, 4, ..., 13
+```
+
+### How to Use
+- **Basic Level Mapping**: Use when a direct one-to-one mapping is required.
+- **Advanced Level Mapping**: Use when multiple mappings are needed for increased flexibility.
+
+### Notes
+- Ensure that the correct mapping level is selected before execution.
+- Future updates may introduce additional mapping rules or customization options.
 
 ---
 
@@ -97,6 +154,13 @@ Check that:
 
 ### ❌ Python Not Found  
 If you see **"command not found"**, ensure **Python is installed and added to your system PATH**.  
+
+### ❌ Selenium Import Error  
+If you see **ModuleNotFoundError: No module named 'selenium'**, reinstall Selenium:  
+
+```sh
+pip install selenium --upgrade
+```
 
 ---
 

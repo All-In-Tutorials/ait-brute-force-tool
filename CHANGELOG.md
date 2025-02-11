@@ -27,3 +27,8 @@
 - Made credential loading dynamic for portability.
 - Created `generator.py` file for dictionary file creation.
 - Added .gitignore to exclude the Dictionary directory.
+- Updated `README.md` with additional documentation for **Usage** and **Requirements**.
+- Renamed directory in `generator.py` to maintain uniformity.
+- Refactored `main.py` to:
+  - Load generated directories for **username and password**.
+  - Implement an **option-based selection** for better flexibility.
