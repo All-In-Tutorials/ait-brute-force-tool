@@ -1,34 +1,21 @@
 # 📌 CHANGELOG
 
-## 🔥 Latest Improvements (Development)
-
-### ✅ Better Logging
-- Uses `logging.info()` instead of `print()`, making debugging easier.
-
-### ✅ More Reliable Exception Handling
-- Catches `TimeoutException`, `NoSuchElementException`, and generic errors for robustness.
-
-### ✅ No Unnecessary Sleep Delays
-- Uses `wait.until(...)` instead of `time.sleep()` for efficient execution.
-
-### ✅ Handles Wrong Login Page More Efficiently
-- Detects and avoids unnecessary page reloads when redirected to the wrong login page.
-
-### ✅ CLI Arguments for Automation
-
-- Run the tool with custom login URLs:
-  
-  ```sh
-  python main.py --login_url "http://example.com/login" --wrong_url "http://example.com/fail"
-  ```
-
 ## [Unreleased]
-### Added
-- Made credential loading dynamic for portability.
-- Created `generator.py` file for dictionary file creation.
-- Added .gitignore to exclude the Dictionary directory.
-- Updated `README.md` with additional documentation for **Usage** and **Requirements**.
+
+### 🆕 Added
+- CLI arguments support for custom login URLs (`--login_url`, `--wrong_url`).
+- Dynamic credential loading for portability.
+- `generator.py` file for dictionary file creation.
+- `.gitignore` to exclude the Dictionary directory.
+- Documentation updates in `README.md` (Usage & Requirements section).
+- Option-based selection mechanism in `main.py` for better flexibility.
+
+### 🛠️ Changed
 - Renamed directory in `generator.py` to maintain uniformity.
-- Refactored `main.py` to:
-  - Load generated directories for **username and password**.
-  - Implement an **option-based selection** for better flexibility.
+- Refactored `main.py` to load generated directories for username and password.
+
+### 🐛 Fixed
+- Improved logging: Replaced `print()` with `logging.info()` for better debugging.
+- Exception handling: Added `TimeoutException`, `NoSuchElementException`, and generic error handling for robustness.
+- Optimized delays: Replaced `time.sleep()` with `wait.until(...)` for better performance.
+- Wrong login page handling: Added detection to prevent unnecessary reloads.

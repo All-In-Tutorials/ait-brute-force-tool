@@ -49,20 +49,20 @@ def create_dictionary(option):
             f.write("")
     
     dir_names = {
-        "1": "1-UC-UC-UC-UC",
-        "2": "2-Num-UC-UC-UC",
-        "3": "3-UC-Num-UC-UC",
-        "4": "4-UC-UC-Num-UC",
-        "5": "5-UC-UC-UC-Num",
-        "6": "6-Num-Num-UC-UC",
-        "7": "7-Num-Num-Num-UC",
-        "8": "8-Num-Num-Num-Num",
-        "9": "9-UC-UC-Num-Num",
-        "10": "10-UC-Num-Num-Num",
-        "11": "11-UC-Num-UC-Num",
-        "12": "12-UC-Num-Num-UC",
-        "13": "13-Num-UC-Num-UC",
-        "14": "14-Num-UC-UC-Num",
+        "1": "UC-UC-UC-UC",
+        "2": "Num-UC-UC-UC",
+        "3": "UC-Num-UC-UC",
+        "4": "UC-UC-Num-UC",
+        "5": "UC-UC-UC-Num",
+        "6": "Num-Num-UC-UC",
+        "7": "Num-Num-Num-UC",
+        "8": "Num-Num-Num-Num",
+        "9": "UC-UC-Num-Num",
+        "10": "UC-Num-Num-Num",
+        "11": "UC-Num-UC-Num",
+        "12": "UC-Num-Num-UC",
+        "13": "Num-UC-Num-UC",
+        "14": "Num-UC-UC-Num",
     }
 
     if option == "15":
